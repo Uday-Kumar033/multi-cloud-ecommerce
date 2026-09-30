@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: frontend
   namespace: ecommerce
+  labels:
+    app: frontend
 
 spec:
   replicas: 2
@@ -18,35 +20,44 @@ spec:
 
     spec:
       containers:
-
         - name: frontend
 
-          image: ecommerce-frontend:latest
+          # GitHub Actions replaces this with the real ECR image.
+          image: REPLACE_WITH_ECR_FRONTEND_IMAGE
 
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
 
           ports:
             - containerPort: 80
+
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+
+            limits:
+              cpu: "300m"
+              memory: "256Mi"
 
           readinessProbe:
             httpGet:
               path: /
               port: 80
-
-            initialDelaySeconds: 5
+            initialDelaySeconds: 10
             periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
 
           livenessProbe:
             httpGet:
               path: /
               port: 80
-
-            initialDelaySeconds: 10
+            initialDelaySeconds: 30
             periodSeconds: 20
-
+            timeoutSeconds: 3
+            failureThreshold: 3
 
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -54,11 +65,12 @@ metadata:
   namespace: ecommerce
 
 spec:
+  type: LoadBalancer
+
   selector:
     app: frontend
 
   ports:
-    - port: 80
+    - protocol: TCP
+      port: 80
       targetPort: 80
-
-  type: LoadBalancer

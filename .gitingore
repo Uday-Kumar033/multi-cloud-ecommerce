@@ -1,0 +1,11 @@
+terraform/aws/.terraform/
+terraform/aws/*.tfstate
+terraform/aws/*.tfstate.*
+terraform/aws/terraform.tfvars
+terraform/aws/.terraform.lock.hcl
+
+
+terraform/azure/.terraform/
+terraform/azure/*.tfstate
+terraform/azure/*.tfstate.*
+terraform/azure/terraform.tfvars

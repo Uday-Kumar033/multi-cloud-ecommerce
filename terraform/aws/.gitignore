@@ -1,0 +1,8 @@
+# Ignore all .terraform directories
+**/.terraform/
+
+# Ignore Terraform state files and history
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+
